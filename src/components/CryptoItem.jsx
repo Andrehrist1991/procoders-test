@@ -1,21 +1,21 @@
 import React from 'react'
 
-export function CryptoItem({ priceUsd, symbol }) {
+export function CryptoItem({ priceUsd, uahPrice, rubPrice, symbol, setCrypto }) {
 
-    const parseIntPrice = parseFloat(priceUsd);
+    const handleSetCrypto = () => {
+        setCrypto(priceUsd);
+    }
 
-    const toFixedPrice = parseIntPrice.toFixed(1);
-
-    console.log(typeof toFixedPrice)
+    console.log(typeof priceUsd)
 
     return (
         <div className="col-md-4">
-            <div className="crypto-item">
+            <div className="crypto-item" onClick={handleSetCrypto}>
                 {symbol}
                 <ul className="crypto-item__lst">
                     <li className="crypto-item__itm">USD: {priceUsd}</li>
-                    <li className="crypto-item__itm">UAH:</li>
-                    <li className="crypto-item__itm">RUB:</li>
+                    <li className="crypto-item__itm">UAH: {(priceUsd * uahPrice).toFixed(1)}</li>
+                    <li className="crypto-item__itm">RUB: {(priceUsd * rubPrice).toFixed(1)}</li>
                 </ul>
             </div>
         </div>

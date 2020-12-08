@@ -1,25 +1,21 @@
 import axios from 'axios';
 
-export const fetchRates = (dispatch) => {
+export const fetchRates = async (dispatch) => {
 
-    const requiredCrypto = ['bitcoin', 'ethereum', 'xrp'];
+    try {
+        await axios.get('https://api.coincap.io/v2/assets').then(({ data }) => {
+        dispatch(setRatesCrypto(data));
+        });
 
-    const requiredCurrency = ['USD', 'RUR', 'EUR'];
+        await axios.get('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11').then(({ data }) => {
+            dispatch(setRatesCurrency(data));
+            dispatch(setCurrencyPrices());
+        });
+    } catch(e) {
+        console.log(e.message);
+    }
 
-    axios.get('https://api.coincap.io/v2/assets').then(({ data }) => {
     
-      // filtering data by required values
-      const result = data.data.filter(x => requiredCrypto.some(y => x.id === y));
-
-      dispatch(setRatesCrypto(result));
-    });
-
-    axios.get('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11').then(({ data }) => {
-        // filtering data by required values
-        const result = data.filter(x => requiredCurrency.some(y => x.ccy === y));
-
-        dispatch(setRatesCurrency(result));
-    });
 };
 
 export const setRatesCrypto = (items) => ({
@@ -30,4 +26,8 @@ export const setRatesCrypto = (items) => ({
 export const setRatesCurrency = (items) => ({
     type: 'SET_RATES_CURRENCY',
     payload: items
+});
+
+export const setCurrencyPrices = () => ({
+    type: 'SET_CURRENCY_PRICES'
 });

@@ -1,6 +1,10 @@
+import { SET_RATES_CRYPTO, SET_RATES_CURRENCY, SET_CURRENCY_PRICES, SELECT_CRYPTO } from '../types'
+
 const initialState = {
     cryptoArr: [],
     currencyArr: [],
+    selectedCrypto: {},
+    baseCrypto: null,
     priceUAH: null,
     priceRUB: null,
 };
@@ -29,27 +33,22 @@ const geItemPriceSale = (array, search) => {
 
 const rate = (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_RATES_CRYPTO': {
-
+        case SET_RATES_CRYPTO: {
+            return {
+                ...state,
+                cryptoArr: action.payload,
+            }
+        }
+        case SET_RATES_CURRENCY: {
             // filtering data by required values
-            const result = action.payload.data.filter(x => requiredCrypto.some(y => x.id === y));
-
+            //const result = action.payload.filter(x => requiredCurrency.some(y => x.ccy === y));
 
             return {
                 ...state,
-                cryptoArr: result
+                currencyArr: action.payload
             }
         }
-        case 'SET_RATES_CURRENCY': {
-            // filtering data by required values
-            const result = action.payload.filter(x => requiredCurrency.some(y => x.ccy === y));
-
-            return {
-                ...state,
-                currencyArr: result
-            }
-        }
-        case 'SET_CURRENCY_PRICES': {
+        case SET_CURRENCY_PRICES: {
             const arrOFcurrencies = [
                 ...state.currencyArr
             ]
@@ -68,6 +67,13 @@ const rate = (state = initialState, action) => {
                 ...state,
                 priceUAH: usdMiddle,
                 priceRUB: usdMiddle / rurMiddle
+            }
+        }
+        case SELECT_CRYPTO: {
+            console.log("lolo")
+            return {
+                ...state,
+                selectedCrypto: action.payload
             }
         }
         default:

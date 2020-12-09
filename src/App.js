@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { fetchRates, getNewCryptoCurrency } from './redux/actions/rate';
+import { fetchRates } from './redux/actions/rate';
 
 import { CryptoItem } from './components'
 
@@ -14,24 +14,22 @@ const App = () => {
     return {
       cryptoItems: rate.cryptoArr,
       uahPrice: rate.priceUAH,
-      rubPrice: rate.priceRUB,
-      base: rate.baseCrypto
+      rubPrice: rate.priceRUB
     }
   });
-
-  const [currentCrypto, setCurrentCrypto] = useState(0);
 
   const valToNumber = (value) => {
     return parseFloat(value).toFixed(1);
   }
 
+  const [currentCrypto, setCurrentCrypto] = useState(0);
+
   React.useEffect(() => {
-    //dispatch(fetchRates().then(setCurrentCrypto(base)))
-    dispatch(fetchRates());
+    fetchRates(dispatch);
   }, []);
 
   const onSetCryptoCurrency = (val) => {
-    dispatch(getNewCryptoCurrency(val))
+    setCurrentCrypto(val);
   }
 
   return (
@@ -42,11 +40,10 @@ const App = () => {
             <CryptoItem
               key={item.id}
               setCrypto={onSetCryptoCurrency}
-              priceUsd={item.priceUsd}
+              priceUsd={valToNumber(item.priceUsd)} 
               symbol={item.symbol}
               uahPrice={uahPrice}
               rubPrice={rubPrice}
-              {...item}
             />
           )) }
         </div>
@@ -56,8 +53,4 @@ const App = () => {
   );
 }
 
-const mapStateToProps = (state) => ({
-  selected: state.currentCrypto,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;

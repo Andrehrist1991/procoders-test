@@ -18,42 +18,39 @@ const CryptoCalculator = ({ changeRates, selectedCrypto, uahPrice, rubPrice }) =
 
     useEffect(() => {
         setCurrencyPrice(changeRates.uah)
-    }, [uahPrice, rubPrice]);
+    }, [changeRates.uah, uahPrice, rubPrice]);
 
     const onChangeCurrency = (val) => {
         setRadiovalue(val);
         setCurrencyPrice(radios[val -1].price);
     }
 
-    console.log(uahPrice)
-    console.log(rubPrice)
-
-    const cryptoPrice = parseFloat(selectedCrypto.priceUsd);
-
-    const multiplication = parseFloat(cryptoPrice * currencyPrice);
+    const multiplication = selectedCrypto.priceUsd * currencyPrice;
 
     return (
         <div className="calculator__wrap">
             <Form>
-                <Form.Label>Volume: </Form.Label>
-                <Form.Control type="number" placeholder="0" onChange={(e) => setQueryValue(e.target.value)} />
-                <ToggleButtonGroup type="radio" name="radio" defaultValue={1}>
-                    {changeRates && radios.map((radio, idx) => (
-                        <ToggleButton
-                            key={idx}
-                            type="radio"
-                            variant="secondary"
-                            name="radio"
-                            value={radio.value}
-                            checked={radioValue === radio.value}
-                            onChange={(e) => onChangeCurrency(e.currentTarget.value)}
-                        >
-                            {radio.name}
-                        </ToggleButton>
-                    ))}
-                </ToggleButtonGroup>
+                <div className="calculator__form-inner">
+                    <Form.Label>Volume: </Form.Label>
+                    <Form.Control type="number" placeholder="0" onChange={(e) => setQueryValue(e.target.value)} />
+                </div>
             </Form>
-            <p><b>{queryValue} {selectedCrypto.symbol}</b> will be <b>{(queryValue * multiplication).toFixed(1)} in {radios[radioValue - 1].name}</b></p>
+            <ToggleButtonGroup type="radio" name="radio" defaultValue={1}>
+                {changeRates && radios.map((radio, idx) => (
+                    <ToggleButton
+                        key={idx}
+                        type="radio"
+                        variant="secondary"
+                        name="radio"
+                        value={radio.value}
+                        checked={radioValue === radio.value}
+                        onChange={(e) => onChangeCurrency(e.currentTarget.value)}
+                    >
+                        {radio.name}
+                    </ToggleButton>
+                ))}
+            </ToggleButtonGroup>
+            <p><b>{queryValue} {selectedCrypto.symbol}</b>&nbsp; will be <b> {(queryValue * multiplication).toFixed(1)} in {radios[radioValue - 1].name}</b></p>
         </div>
     )
 };

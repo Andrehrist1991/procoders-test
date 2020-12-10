@@ -32,16 +32,25 @@ const geItemPriceSale = (array, search) => {
 const rate = (state = initialState, action) => {
     switch (action.type) {
         case SET_RATES_CRYPTO: {
+
+            const filtered = action.payload.filter((price) => {
+                return price.priceUsd = parseFloat(price.priceUsd);
+            });
+
             return {
                 ...state,
-                cryptoArr: action.payload
+                cryptoArr: filtered
             }
         }
         case SET_RATES_CURRENCY: {
 
+            const filtered = action.payload.filter((price) => {
+                return price.buy = parseFloat(price.buy), price.sale = parseFloat(price.sale);
+            });
+
             return {
                 ...state,
-                currencyArr: action.payload
+                currencyArr: filtered
             }
         }
         case SET_CURRENCY_PRICES: {

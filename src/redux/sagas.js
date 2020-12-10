@@ -3,6 +3,7 @@ import { SET_RATES_CRYPTO, SET_RATES_CURRENCY, SET_CURRENCY_PRICES, SELECT_CRYPT
 import { fetchRates } from './actions/rate';
 
 export function* sagaWatcher() {
+  //yield takeEvery(SET_RATES_CRYPTO, sagaWorker);
   yield takeEvery(sagaWorker);
 }
 

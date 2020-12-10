@@ -1,21 +1,23 @@
-import React from 'react'
+import React from 'react';
 
-export function CryptoItem({ priceUsd, uahPrice, rubPrice, symbol, setCrypto, id }) {
+export function CryptoItem({ priceUsd, uahPrice, rubPrice, symbol, setCrypto, id, image }) {
 
     const handleSetCrypto = () => {
         setCrypto(id);
     }
 
-    const priceToFixed = parseFloat(priceUsd).toFixed(1);
-
     return (
         <div className="col-md-4">
             <div className="crypto-item" onClick={handleSetCrypto}>
-                {symbol}
+                <div className="crypto-item__left">
+                    {/* <img src={require(`../assets/img/${id}.png`)} alt="xrp"/> */}
+                    <img className="crypto-item__img" src={image} alt="xrp"/>
+                    <b>{symbol}</b>
+                </div>
                 <ul className="crypto-item__lst">
-                    <li className="crypto-item__itm">USD: {priceToFixed}</li>
-                    <li className="crypto-item__itm">UAH: {(priceToFixed * uahPrice).toFixed(1)}</li>
-                    <li className="crypto-item__itm">RUB: {(priceToFixed * rubPrice).toFixed(1)}</li>
+                    <li className="crypto-item__itm"><b>USD:</b> {(priceUsd * 1).toFixed(1)}</li>
+                    <li className="crypto-item__itm"><b>UAH:</b> {(priceUsd * uahPrice).toFixed(1)}</li>
+                    <li className="crypto-item__itm"><b>RUB:</b> {(priceUsd * rubPrice).toFixed(1)}</li>
                 </ul>
             </div>
         </div>
@@ -23,3 +25,4 @@ export function CryptoItem({ priceUsd, uahPrice, rubPrice, symbol, setCrypto, id
 }
 
 export default CryptoItem;
+

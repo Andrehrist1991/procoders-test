@@ -4,14 +4,12 @@ const initialState = {
     cryptoArr: [],
     currencyArr: [],
     selectedCrypto: {},
-    baseCrypto: null,
-    priceUAH: null,
-    priceRUB: null,
+    changeRates: {
+        "usd": 1,
+        "uah": null,
+        "rub": null,
+    },
 };
-
-const requiredCrypto = ['bitcoin', 'ethereum', 'xrp'];
-
-const requiredCurrency = ['USD', 'RUR'];
 
 const geItemPriceBuy = (array, search) => {
     var i = array.length;
@@ -29,7 +27,7 @@ const geItemPriceSale = (array, search) => {
            return array[i].sale;
         }
     }
-  }
+}
 
 const rate = (state = initialState, action) => {
     switch (action.type) {
@@ -40,8 +38,6 @@ const rate = (state = initialState, action) => {
             }
         }
         case SET_RATES_CURRENCY: {
-            // filtering data by required values
-            const result = action.payload.filter(x => requiredCurrency.some(y => x.ccy === y));
 
             return {
                 ...state,
@@ -65,14 +61,29 @@ const rate = (state = initialState, action) => {
 
             return {
                 ...state,
-                priceUAH: usdMiddle,
-                priceRUB: usdMiddle / rurMiddle
+                changeRates: {
+                    "usd": 1,
+                    "uah": usdMiddle,
+                    "rub": usdMiddle / rurMiddle
+                }
             }
         }
         case SELECT_CRYPTO: {
-            console.log("lolo")
+            const oldItems = [
+                ...state.cryptoArr,
+            ];
+
+            //Change object in array
+            const newList = oldItems.map(o => {
+                if (o.id === action.payload.id) {
+                return action.payload;
+                }
+                return o;
+            });
+
             return {
                 ...state,
+                cryptoArr: newList,
                 selectedCrypto: action.payload
             }
         }

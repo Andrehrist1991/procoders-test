@@ -3,25 +3,30 @@ import logo from './logo.svg';
 import './App.css';
 import { connect, useDispatch, useSelector } from 'react-redux';
 
-import { fetchRates, getNewCryptoCurrency } from './redux/actions/rate';
+import { fetchRates, updateRates, setNewCryptoCurrency, getNewCryptoCurrency } from './redux/actions/rate';
 
-import { CryptoItem } from './components'
+import { CryptoItem, CryptoCalculator } from './components'
 
 const App = () => {
   const dispatch = useDispatch();
 
-  const { cryptoItems, uahPrice, rubPrice } = useSelector(({ rate }) => {
+  const { cryptoItems, uahPrice, rubPrice, changeRates, selectedCrypto } = useSelector(({ rate }) => {
     return {
       cryptoItems: rate.cryptoArr,
-      uahPrice: rate.priceUAH,
-      rubPrice: rate.priceRUB
+      changeRates: rate.changeRates,
+      uahPrice: rate.changeRates.uah,
+      rubPrice: rate.changeRates.rub,
+      selectedCrypto: rate.selectedCrypto
     }
   });
 
-  const [currentCrypto, setCurrentCrypto] = useState(0);
-
   React.useEffect(() => {
     dispatch(fetchRates());
+    const interval = setInterval(() => {
+      dispatch(updateRates());
+    }, 5000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const onSetCryptoCurrency = (val) => {
@@ -44,6 +49,8 @@ const App = () => {
             />
           )) }
         </div>
+        <p className="text-center">Selected coin: {selectedCrypto.symbol}</p>
+        {cryptoItems.length !== 0 && (<CryptoCalculator changeRates={changeRates} uahPrice={uahPrice} rubPrice={rubPrice} selectedCrypto={selectedCrypto} />)}
       </div>
       
     </div>
@@ -54,4 +61,4 @@ const mapStateToProps = (state) => ({
   selected: state.currentCrypto,
 });
 
-export default App;
+export default connect(mapStateToProps)(App);

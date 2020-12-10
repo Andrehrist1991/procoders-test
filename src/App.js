@@ -9,20 +9,25 @@ import xrpImg from './assets/img/xrp.png';
 
 import { fetchRates, updateRates, getNewCryptoCurrency } from './redux/actions/rate';
 
-import { CryptoItem, CryptoCalculator } from './components'
+import { CryptoItem, CryptoCalculator, Loader } from './components'
 
 const App = () => {
   const dispatch = useDispatch();
 
-  const { cryptoItems, uahPrice, rubPrice, changeRates, selectedCrypto } = useSelector(({ rate }) => {
+  const loading = useSelector((state) => state.appReducer.showLoader);
+
+  const { cryptoItems, uahPrice, loaded, rubPrice, changeRates, selectedCrypto } = useSelector(({ rate }) => {
     return {
       cryptoItems: rate.cryptoArr,
       changeRates: rate.changeRates,
       uahPrice: rate.changeRates.uah,
       rubPrice: rate.changeRates.rub,
-      selectedCrypto: rate.selectedCrypto
+      selectedCrypto: rate.selectedCrypto,
+      loaded: rate.isLoaded
     }
   });
+
+
 
   React.useEffect(() => {
     dispatch(fetchRates());
@@ -41,31 +46,28 @@ const App = () => {
 
   return (
     <div className="App">
-      <div className="container">
-        <div className="row">
-          {cryptoItems && cryptoItems.map((item, idx) => (
-            <CryptoItem
-              key={item.id}
-              setCrypto={onSetCryptoCurrency}
-              priceUsd={item.priceUsd}
-              image={arrImages[idx]}
-              symbol={item.symbol}
-              uahPrice={uahPrice}
-              rubPrice={rubPrice}
-              {...item}
-            />
-          )) }
-        </div>
-        <p className="text-center crypto-item__current">Selected coin: {selectedCrypto.symbol}</p>
-        {cryptoItems.length !== 0 && (<CryptoCalculator changeRates={changeRates} uahPrice={uahPrice} rubPrice={rubPrice} selectedCrypto={selectedCrypto} />)}
-      </div>
-      
+      {loaded ? (
+        <div className="container">
+          <div className="row">
+            {cryptoItems && cryptoItems.map((item, idx) => (
+              <CryptoItem
+                key={item.id}
+                setCrypto={onSetCryptoCurrency}
+                priceUsd={item.priceUsd}
+                image={arrImages[idx]}
+                symbol={item.symbol}
+                uahPrice={uahPrice}
+                rubPrice={rubPrice}
+                {...item}
+              />
+            )) }
+          </div>
+          <p className="text-center crypto-item__current">Selected coin: {selectedCrypto.symbol}</p>
+          {cryptoItems.length !== 0 && (<CryptoCalculator changeRates={changeRates} uahPrice={uahPrice} rubPrice={rubPrice} selectedCrypto={selectedCrypto} />)}
+        </div> 
+      ) : <Loader />}
     </div>
   );
 }
 
-const mapStateToProps = (state) => ({
-  selected: state.currentCrypto,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;

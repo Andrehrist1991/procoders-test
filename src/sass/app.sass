@@ -12,3 +12,16 @@ body
 
 .App
     padding: 70px 0
+    display: flex
+    flex-direction: column
+    min-height: 100vh
+    justify-content: center
+
+.loader__img
+    animation: loader-spin infinite 5s linear
+
+@keyframes loader-spin
+    from
+        transform: rotate(0deg)
+    to
+        transform: rotate(360deg)

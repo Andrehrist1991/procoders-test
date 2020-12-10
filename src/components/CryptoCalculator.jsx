@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Form, ToggleButtonGroup, ToggleButton } from 'react-bootstrap';
-import { connect } from 'react-redux';
 
 
 
@@ -55,8 +54,4 @@ const CryptoCalculator = ({ changeRates, selectedCrypto, uahPrice, rubPrice }) =
     )
 };
 
-const mapStateToProps = (state) => ({
-    selectedRadio: state.radioValue,
-});
-
-export default connect(mapStateToProps)(CryptoCalculator);
+export default CryptoCalculator;

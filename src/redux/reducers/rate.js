@@ -9,6 +9,7 @@ const initialState = {
         "uah": null,
         "rub": null,
     },
+    isLoaded: false
 };
 
 const geItemPriceBuy = (array, search) => {
@@ -39,13 +40,15 @@ const rate = (state = initialState, action) => {
 
             return {
                 ...state,
-                cryptoArr: filtered
+                cryptoArr: filtered,
+                isLoaded: true
             }
         }
         case SET_RATES_CURRENCY: {
 
             const filtered = action.payload.filter((price) => {
-                return price.buy = parseFloat(price.buy), price.sale = parseFloat(price.sale);
+                return price.buy = parseFloat(price.buy), 
+                price.sale = parseFloat(price.sale);
             });
 
             return {
